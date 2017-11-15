@@ -1,0 +1,598 @@
+
+
+
+
+
+
+// ATTENTION WATCH MY VIDEO TO CHECK MY CODE QUICKLY, ITS TOO LONG.
+
+
+
+
+<!doctype html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        #canvasboard {
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-image: url("./Board.png");
+            background-size: 100% 100%;
+        }
+
+        #canvasbackground {
+            border: 1px solid #000;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-image: url("https://newevolutiondesigns.com/images/freebies/galaxy-wallpaper-35.jpg");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+
+        }
+    </style>
+
+
+
+</head>
+
+
+<body>
+    <canvas id="canvasboard" width=500 height=500></canvas>
+    <canvas id="canvasbackground" width=1900 height=1000></canvas>
+
+    <script> 
+    	// ATTENTION WATCH MY VIDEO TO CHECK MY CODE QUICKLY, ITS TOO LONG.
+
+
+    	// for checking Draw
+    	var M = 0; 
+
+
+        //Hey lookie! Rand again =), i dont need it tho... 
+        const rand = function (num) {
+            return Math.floor(Math.random() * num) + 1;
+        };
+
+
+// ATTENTION WATCH MY VIDEO TO CHECK MY CODE QUICKLY, ITS TOO LONG.
+
+        const gameboard = document.getElementById('canvasboard');
+        const canvasboard = gameboard.getContext('2d');
+        const bkgr = document.getElementById('canvasbackground');
+        const canvasbackground = bkgr.getContext('2d');
+
+        var boardw = gameboard.width;
+        var boardh = gameboard.height;
+        var bckgrw = bkgr.width;
+        var bckgrh = bkgr.height;
+
+
+
+        // drawing X
+        function drawX(dx, dy) {
+            const xImg = new Image();
+            xImg.src = 'http://www.clker.com/cliparts/P/x/e/Y/z/O/white-x-cross-hi.png';
+            xImg.onload = function () {
+                canvasboard.drawImage(xImg, dx, dy, 150, 150);
+            }
+        };
+
+
+        // drawing O
+        function drawO(dx, dy) {
+            const oImg = new Image();
+            oImg.src = 'http://joyandroy.com/wp/wp-content/uploads/2016/09/1The_Omega_House_Symbol.png';
+            oImg.onload = function () {
+                canvasboard.drawImage(oImg, dx, dy, 150, 150);
+            }
+        };
+
+        // Board
+        const boardarr = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+        ];
+
+
+        	let isWin = false;
+        	let isDraw = false;
+			let isFirst = false;
+			let isHuman = true;
+
+
+// ATTENTION WATCH MY VIDEO TO CHECK MY CODE QUICKLY, ITS TOO LONG.
+
+        // Deciding where to make the next move
+
+const nextmove = function(board) {
+
+
+
+    for ( let i = 0; i < board.length ; i++) {
+
+
+    		// Center  
+   	if ( board[1][1] === ''){
+       	return [1,1];
+   	}
+
+    	//for checking horizontal
+
+    	let hori = '';
+
+    	for (let h = 0 ; h < board[i].length ; h++){
+
+    			hori = hori + board[i][h];
+				
+		}
+
+       		if ('oo' === hori) {
+          			
+          		for ( let k = 0 ; k < board[i].length ; k++){
+          			if ( board[i][k] === '' ) {
+          				return [i,k];
+          				}
+
+          			}
+
+    		}
+      	
+    }
+
+    for ( let i = 0; i < board.length ; i++) {
+
+    	
+
+    	//for checking vertical
+
+    	let verti = '';
+
+    	for (let v = 0 ; v < board[i].length ; v++){
+
+    			verti = verti + board[v][i];
+		}
+
+       		if ( 'oo' === verti ) {
+          			
+          		for ( let k = 0 ; k < board[i].length ; k++){
+          			if ( board[k][i] === '' ) {
+          				return [k,i];
+          				}
+          				
+          		}
+          	}
+    }
+
+
+	if ( board[0][0] + board[1][1] === 'oo' && board [2][2] === ''){
+    	return [2,2];
+    }
+
+
+    if( board[0][2] + board[1][1] === 'oo' && board[2][0] === ''){
+    	return [2,0];
+    }
+
+
+    if( board[2][2] + board[1][1] === 'oo' && board[0][0] === ''){
+    	return [0,0];
+    }
+
+	if( board[2][0] + board[1][1] === 'oo' && board[0][2] === ''){
+    	return [0,2];
+    }
+
+	
+
+    // Left 1
+    if ( board [0][1] === 'x' && board[1][0] === 'x' && board[0][0] === ''){
+    	return [0,0];
+    }
+
+
+    // Right 1	
+	if ( board [0][1] === 'x' && board[1][2] === 'x' && board[0][2] === ''){
+    	return [0,2];
+    }
+
+    //Left 2
+
+    if ( board [1][0] === 'x' && board[2][1] === 'x' && board[2][0] === ''){
+    	return [2,0];
+    }
+
+    //Right 2
+
+    if ( board [1][2] === 'x' && board[2][1] === 'x' && board[2][2] === ''){
+    	return [2,2];
+    }	
+
+// Checking if 2 are in the same row and returning the coordinate at which will break the streak
+
+
+    for ( let i = 0; i < board.length ; i++) {
+
+    	//for checking horizontal
+
+    	let hori = '';
+
+    	for (let h = 0 ; h < board[i].length ; h++){
+
+    			hori = hori + board[i][h];
+				
+		}
+
+       		if ('xx' === hori) {
+          			
+          		for ( let k = 0 ; k < board[i].length ; k++){
+          			if ( board[i][k] === '' ) {
+          				return [i,k];
+          				}
+
+          			}
+
+    		}
+    
+    	
+
+    }
+
+    
+for ( let i = 0; i < board.length ; i++) {
+
+    	//for checking vertical
+
+    	let verti = '';
+
+    	for (let v = 0 ; v < board[i].length ; v++){
+
+    			verti = verti + board[v][i];
+		}
+
+       		if ( 'xx' === verti ) {
+          			
+          		for ( let k = 0 ; k < board[i].length ; k++){
+          			if ( board[k][i] === '' ) {
+          				return [k,i];
+          				}
+          				
+          		}
+          	}
+    }
+
+// Checking Diagonal
+
+    if ( board[0][0] + board[1][1] === 'xx' && board [2][2] === ''){
+    	return [2,2];
+    }
+
+
+    if( board[0][2] + board[1][1] === 'xx' && board[2][0] === ''){
+    	return [2,0];
+    }
+
+
+    if( board[2][2] + board[1][1] === 'xx' && board[0][0] === ''){
+    	return [0,0];
+    }
+
+	if( board[2][0] + board[1][1] === 'xx' && board[0][2] === ''){
+    	return [0,2];
+    }
+
+
+// Some combinations that i predicted
+  
+	if ( board[0][0] === 'x' && board[2][1] === 'x' && board[2][0] === ''){
+    	return [2,0];
+    }
+
+    if ( board[0][2] === 'x' && board[2][1] === 'x' && board[2][2] === ''){
+    	return [2,2];
+    }
+
+    if ( board[0][0] === 'x' && board[1][2] === 'x' && board[0][2] === ''){
+    	return [0,2];
+    }
+
+    if ( board[1][2] === 'x' && board[2][0] === 'x' && board[2][2] === ''){
+    	return [2,2];
+    }	
+
+    if ( board[0][1] === 'x' && board[2][2] === 'x' && board[0][2] === ''){
+    	return [0,2];
+    }
+
+    if ( board[1][0] === 'x' && board[2][2] === 'x' && board[2][0] === ''){
+    	return [2,0];
+    }
+
+
+
+// Just fillers
+
+    if (board[0][0] === '') {
+    	return [0,0];
+    }
+
+    if (board[0][2] === '') {
+    	return [0,2];
+    }
+
+    if (board[2][0] === '') {
+    	return [2,0];
+    }
+
+    if (board[2][2] === '') {
+    	return [2,2];
+    }
+
+    if (board[0][1] === '') {
+    	return [0,1];
+    }
+
+    if (board[1][2] === '') {
+    	return [1,2];
+    }
+
+    if (board[2][1] === '') {
+    	return [2,1];
+    }
+
+    if (board[1][0] === '') {
+    	return [1,0];
+    }
+
+
+};
+
+        // Make Move 
+
+const makeMove = function(board, coords, isX) {
+    if((coords[0] === 0 || coords[0] === 1 || coords[0] === 2) && (coords[1] === 0 || coords[1] === 1 || coords[1] === 2) ) {
+        const XorO = isX ? 'x': 'o';
+        board[coords[0]][coords[1]] = XorO;
+        return 0;
+    }
+    return -1;
+};
+
+
+
+
+
+
+
+
+
+
+        //Checking the Winner
+
+const check = function (board) {
+
+    for (let i = 0; i < board.length; i++) {
+
+        let lineH = '';
+
+      for (let h = 0; h < board[i].length; h++) {
+        if (board[i][h] === '') {
+          break;
+        }
+        // Horizontal   
+        lineH = lineH + board[i][h];
+        
+        // Checking Horizontal
+        
+        // for X
+        
+        if ('xxx' === lineH) {
+          return {
+            winner: 'x',
+            winningLocations: [[i, 0], [i, 1], [i, 2]] // locations of winning Xs
+          };
+        }
+        
+        // for O
+        
+        if ('ooo' === lineH) {
+          return {
+            winner: 'o',
+            winningLocations: [[i, 0], [i, 1], [i, 2]] // locations of winning Os
+          };
+        }
+      }
+    }  
+    for (let i = 0; i < board.length; i++) {
+
+        let lineV = '';
+
+
+      for (let v = 0; v < board[i].length; v++) {
+        if (board[v][i] === '') {
+          break;
+        }
+        
+        // Vertical                       
+        lineV = lineV + board[v][i];
+        
+        // Checking Vertical
+
+        // for X
+        
+        if ('xxx' === lineV) {
+          return {
+            winner: 'x',
+            winningLocations: [[0, i], [1, i], [2, i]] // locations of winning Xs
+          };
+        }
+        
+        // for O
+
+        if ('ooo' === lineV) {
+          return {
+            winner: 'o',
+            winningLocations: [[0, i], [1, i], [2, i]] // locations of winning Os
+          };
+        }
+      }
+    }  
+      // Checking Diagonal 1
+      
+      // for X
+      
+      if( board [0][0] + board[1][1] + board[2][2] === 'xxx') {
+        return {
+          winner: 'x',
+          winningLocations: [[0, 0], [1, 1], [2, 2]] // locations of winning Xs
+        };
+      }
+      
+      //for O
+      
+      if( board [0][0] + board[1][1] + board[2][2] === 'ooo') {
+        return {
+          winner: 'o',
+          winningLocations: [[0, 0], [1, 1], [2, 2]] // locations of winning Xs
+        };
+      }
+      
+      
+      // Checking Diagonal 2
+      
+      // for X
+      
+      if( board[0][2] + board[1][1] + board[2][0] === 'xxx') {
+        return {
+          winner: 'x',
+          winningLocations: [[0, 2], [1, 1], [2, 0]] // locations of winning Xs
+        };
+      }
+      
+      // for O
+      
+      if( board[0][2] + board[1][1] + board[2][0] === 'ooo') {
+        return {
+          winner: 'o',
+          winningLocations: [[0, 2], [1, 1], [2, 0]] // locations of winning Xs
+        };
+      }
+
+};
+
+const checkdraw = function (M){
+
+ 	if ( M === 5){
+		return {
+		    winner: 'none' // nobody won. Game over
+		};
+	}
+
+};
+            // Fusing Everything Together For X
+
+        const MOVE = function() {
+			if(!isHuman) {
+				const next = nextmove(boardarr);
+				if(makeMove(boardarr, next) === 0) {
+					makeMove(boardarr, next);
+					drawO(next[1] * (boardw / 3), next[0] * (boardw / 3));
+				}
+			}
+			isHuman = !isHuman;
+		};
+
+
+
+
+
+gameboard.addEventListener('click', function(e) {
+          
+            if(boardarr[Math.floor(e.offsetY/(boardw / 3))][Math.floor(e.offsetX/(boardw / 3))] === '') {
+
+				
+				M = M + 1; 
+
+                boardarr[Math.floor(e.offsetY/(boardw / 3))][Math.floor(e.offsetX/(boardw / 3))] = 'x';
+                drawX(Math.floor(e.offsetX/(boardw / 3)) * (boardw / 3), 
+                  Math.floor(e.offsetY/(boardw / 3)) * (boardw / 3));
+                isFirst = false;
+                isHuman = false;
+            }
+
+
+            if(isWin) {
+
+            	M = 0;
+
+                for(let i = 0; i < boardarr.length; i++) {
+                    for(let j = 0; j < boardarr.length; j++) {
+                        boardarr[i][j] = '';
+                    }
+                }   
+
+
+                boardarr[Math.floor(e.offsetY/(boardw / 3))][Math.floor(e.offsetX/(boardw / 3))] = 'x';        
+                canvasboard.clearRect(0, 0, boardw, boardh);
+                isWin = false;
+                MOVE();
+                isFirst = true;
+            }
+
+            if(isDraw) {
+
+				isDraw = false;
+				M = 0; 
+                for(let i = 0; i < boardarr.length; i++) {
+                    for(let j = 0; j < boardarr.length; j++) {
+                        boardarr[i][j] = '';
+                    }
+                }  
+
+                canvasboard.clearRect(0, 0, boardw, boardh);
+                
+                MOVE();
+                isFirst = true;
+            }
+
+
+            if(check(boardarr)) {
+                isWin = true;
+            }
+
+            if(checkdraw(M)) {
+                isDraw = true;
+            }
+
+            if(!isFirst && !isWin && !isHuman && !isDraw) {
+                isHuman = true;
+                const next = nextmove(boardarr);
+                if(makeMove(boardarr, next) === 0) {
+                    makeMove(boardarr, next);
+                    drawO(next[1] * (boardw / 3), next[0] * (boardw / 3));
+                }
+         
+            if(check(boardarr)) {
+                isWin = true;
+            }
+
+            if(checkdraw(M)) {
+                isDraw = true;
+            }
+       }
+});
+
+
+    </script>
+
+
+</body>
